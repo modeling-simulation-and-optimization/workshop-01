@@ -1,0 +1,246 @@
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 08/29/22 08:46:06 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+      Taller 1 - MOS
+       
+      Realizado por:
+      Juan Andrés Romero C - 202013449
+      Juan Sebastián Alegría - 202011282
+   8   
+   9  Sets i 'Alimentos' /C, A, L, P/;
+  10   
+  11  Parameter C(i) 'Calorías de cada Alimento' /C 287, A 204, L 146, P 245/;
+  12  Parameter P(i) 'Proteínas de cada Alimento' /C 26, A 4.2, L 8, P 6/;
+  13  Parameter A(i) 'Azúcares de cada Alimento' /C 0, A 0.01, L 13, P 35/;
+  14  Parameter G(i) 'Grasas de cada Alimento' /C 19.3, A 0.5, L 8, P 0.8/;
+  15  Parameter Carb(i) 'Carbohidratos de cada Alimento' /C 0, A 44.1, L 11, P 55/;
+  16  Parameter Precio(i) 'Precios de cada Alimento' /C 3000, A 1000, L 600, P 700/;
+  17   
+  18  Variables
+  19      z 'Función Objetivo'
+  20      x(i) 'Cantidad del alimento';
+  21   
+  22  Scalar calLimit 'Límite de calorías' /1500/;
+  23  Scalar proteinLimit 'Límite de proteínas' /63/;
+  24  Scalar sugarLimit 'Límite de azúcares' /25/;
+  25  Scalar fatLimit 'Límite de grasas' /50/;
+  26  Scalar carbsLimit 'Límite de Carbohidratos' /200/;
+  27   
+  28  Positive Variable
+  29      x;
+  30   
+  31  Equations
+  32      targetFunc 'Función Objetivo'
+  33      calorias 'Restricción de Calorías'
+  34      proteinas 'Restricción de Proteínas'
+  35      azucares 'Restricción de azúcares'
+  36      grasas 'Restricción de grasas'
+  37      carbohidratos 'Restricción de carbohidratos';
+  38   
+  39  targetFunc .. z =e= sum((i), Precio(i)*x(i));
+  40  calorias .. sum((i), C(i)*x(i)) =g= calLimit;
+  41  proteinas .. sum((i), P(i)*x(i)) =g= proteinLimit;
+  42  azucares .. sum((i), A(i)*x(i)) =l= sugarLimit;
+  43  grasas .. sum((i), G(i)*x(i)) =l= fatLimit;
+  44  carbohidratos .. sum((i), Carb(i)*x(i)) =l= carbsLimit;
+  45   
+  46  Model Taller1 /all/;
+  47  option lp=CPLEX;
+  48  Solve Taller1 using lp minimizing z;
+  49  Display x.l;
+  50  Display z.l;
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 MB  40.1.0 93c2a77b WEX-WEI
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 08/29/22 08:46:06 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE Taller1 Using LP From line 48
+
+
+---- targetFunc  =E=  Función Objetivo
+
+targetFunc..  z - 3000*x(C) - 1000*x(A) - 600*x(L) - 700*x(P) =E= 0 ; (LHS = 0)
+     
+
+---- calorias  =G=  Restricción de Calorías
+
+calorias..  287*x(C) + 204*x(A) + 146*x(L) + 245*x(P) =G= 1500 ; (LHS = 0, INFES = 1500 ****)
+     
+
+---- proteinas  =G=  Restricción de Proteínas
+
+proteinas..  26*x(C) + 4.2*x(A) + 8*x(L) + 6*x(P) =G= 63 ; (LHS = 0, INFES = 63 ****)
+     
+
+---- azucares  =L=  Restricción de azúcares
+
+azucares..  0.01*x(A) + 13*x(L) + 35*x(P) =L= 25 ; (LHS = 0)
+     
+
+---- grasas  =L=  Restricción de grasas
+
+grasas..  19.3*x(C) + 0.5*x(A) + 8*x(L) + 0.8*x(P) =L= 50 ; (LHS = 0)
+     
+
+---- carbohidratos  =L=  Restricción de carbohidratos
+
+carbohidratos..  44.1*x(A) + 11*x(L) + 55*x(P) =L= 200 ; (LHS = 0)
+     
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 08/29/22 08:46:06 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE Taller1 Using LP From line 48
+
+
+---- z  Función Objetivo
+
+z
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       targetFunc
+
+
+---- x  Cantidad del alimento
+
+x(C)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+    -3000       targetFunc
+      287       calorias
+       26       proteinas
+       19.3     grasas
+
+x(A)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+    -1000       targetFunc
+      204       calorias
+        4.2     proteinas
+        0.01    azucares
+        0.5     grasas
+       44.1     carbohidratos
+
+x(L)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+     -600       targetFunc
+      146       calorias
+        8       proteinas
+       13       azucares
+        8       grasas
+       11       carbohidratos
+
+REMAINING ENTRY SKIPPED
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 08/29/22 08:46:06 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Range Statistics    SOLVE Taller1 Using LP From line 48
+
+
+RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
+
+RHS       [min, max] : [ 2.500E+01, 1.500E+03] - Zero values observed as well
+Bound     [min, max] : [        NA,        NA] - Zero values observed as well
+Matrix    [min, max] : [ 1.000E-02, 3.000E+03]
+
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 08/29/22 08:46:06 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE Taller1 Using LP From line 48
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           6     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           2     SINGLE VARIABLES            5
+NON ZERO ELEMENTS            23
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 08/29/22 08:46:06 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE Taller1 Using LP From line 48
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   Taller1             OBJECTIVE  z
+     TYPE    LP                  DIRECTION  MINIMIZE
+     SOLVER  CPLEX               FROM LINE  48
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE             9307.9977
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         4    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 22.1.0.0 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:         9307.997731
+
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU targetFunc          .              .              .             1.0000      
+---- EQU calorias        1500.0000      1500.0000        +INF           10.4530      
+---- EQU proteinas         63.0000        67.9273        +INF             .          
+---- EQU azucares          -INF           25.0000        25.0000       -49.5228      
+---- EQU grasas            -INF           43.7630        50.0000          .          
+---- EQU carbohidr~        -INF          200.0000       200.0000       -25.6669      
+
+  targetFunc  Función Objetivo
+  calorias  Restricción de Calorías
+  proteinas  Restricción de Proteínas
+  azucares  Restricción de azúcares
+  grasas  Restricción de grasas
+  carbohidratos  Restricción de carbohidratos
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR z                 -INF         9307.9977        +INF             .          
+
+  z  Función Objetivo
+
+---- VAR x  Cantidad del alimento
+
+         LOWER          LEVEL          UPPER         MARGINAL
+
+C          .             1.3666        +INF             .          
+A          .             4.0562        +INF             .          
+L          .             1.9200        +INF             .          
+P          .              .            +INF         1284.0014      
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 08/29/22 08:46:06 Page 7
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----     49 VARIABLE x.L  Cantidad del alimento
+
+C 1.367,    A 4.056,    L 1.920
+
+
+----     50 VARIABLE z.L                   =     9307.998  Función Objetivo
+
+
+EXECUTION TIME       =        0.063 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
+
+
+USER: GAMS Demo license for Juan Romero              G220823|0002CO-GEN
+      University of Los Andes, Colombia                        DL072145
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\ElRey\Documents\Scripts\GAMS\workshop-01\Taller1.gms
+Output     C:\Users\ElRey\Documents\Scripts\GAMS\workshop-01\Taller1.lst
