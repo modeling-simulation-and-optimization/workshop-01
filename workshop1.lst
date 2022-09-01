@@ -1,4 +1,4 @@
-GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:22:48 Page 1
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:26:15 Page 1
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
@@ -11,11 +11,11 @@ C o m p i l a t i o n
    8   
    9  Sets i 'Foods' /C, A, L, P/;
   10   
-  11  Parameter C(i)  'Calories of each Food'      /C 287, A 204, L 146, P 245/;
-  12  Parameter P(i) 'Proteins of each Food'      /C 26, A 4.2, L 8, P 6/;
-  13  Parameter S(i) 'Sugars of each Food'        /C 0, A 0.01, L 13, P 35/;
-  14  Parameter F(i)  'Fats of each Food'          /C 19.3, A 0.5, L 8, P 0.8/;
-  15  Parameter Carb(i) 'Carbohydrates of each Food' /C 0, A 44.1, L 11, P 55/;
+  11  Parameter C(i)  'Calories of each Food'         /C 287, A 204, L 146, P 245/;
+  12  Parameter P(i) 'Proteins of each Food'          /C 26, A 4.2, L 8, P 6/;
+  13  Parameter S(i) 'Sugars of each Food'            /C 0, A 0.01, L 13, P 35/;
+  14  Parameter F(i)  'Fats of each Food'             /C 19.3, A 0.5, L 8, P 0.8/;
+  15  Parameter Carb(i) 'Carbohydrates of each Food'  /C 0, A 44.1, L 11, P 55/;
   16  Parameter Price(i) 'Prices of each Food'        /C 3000, A 1000, L 600, P 700/;
   17   
   18  Variables z    'Target function'
@@ -51,7 +51,7 @@ C o m p i l a t i o n
 
 
 COMPILATION TIME     =        0.003 SECONDS      3 MB  40.1.0 93c2a77b DEX-DEG
-GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:22:48 Page 2
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:26:15 Page 2
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Equation Listing    SOLVE workshop1 Using LP From line 45
 
@@ -85,7 +85,7 @@ fats..  19.3*x(C) + 0.5*x(A) + 8*x(L) + 0.8*x(P) =L= 50 ; (LHS = 0)
 
 carbohydrates..  44.1*x(A) + 11*x(L) + 55*x(P) =L= 200 ; (LHS = 0)
      
-GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:22:48 Page 3
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:26:15 Page 3
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Column Listing      SOLVE workshop1 Using LP From line 45
 
@@ -125,7 +125,7 @@ x(L)
        11       carbohydrates
 
 REMAINING ENTRY SKIPPED
-GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:22:48 Page 4
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:26:15 Page 4
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Range Statistics    SOLVE workshop1 Using LP From line 45
 
@@ -136,7 +136,7 @@ RHS       [min, max] : [ 2.500E+01, 1.500E+03] - Zero values observed as well
 Bound     [min, max] : [        NA,        NA] - Zero values observed as well
 Matrix    [min, max] : [ 1.000E-02, 3.000E+03]
 
-GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:22:48 Page 5
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:26:15 Page 5
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Model Statistics    SOLVE workshop1 Using LP From line 45
 
@@ -148,8 +148,8 @@ BLOCKS OF VARIABLES           2     SINGLE VARIABLES            5
 NON ZERO ELEMENTS            23
 
 
-GENERATION TIME      =        0.012 SECONDS      4 MB  40.1.0 93c2a77b DEX-DEG
-GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:22:48 Page 6
+GENERATION TIME      =        0.013 SECONDS      4 MB  40.1.0 93c2a77b DEX-DEG
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:26:15 Page 6
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE workshop1 Using LP From line 45
 
@@ -164,7 +164,7 @@ Solution Report     SOLVE workshop1 Using LP From line 45
 **** MODEL STATUS      1 Optimal
 **** OBJECTIVE VALUE             9307.9977
 
- RESOURCE USAGE, LIMIT          0.059 10000000000.000
+ RESOURCE USAGE, LIMIT          0.042 10000000000.000
  ITERATION COUNT, LIMIT         4    2147483647
 --- *** This solver runs with a community license. No commercial use.
 --- GMO setup time: 0.00s
@@ -217,7 +217,7 @@ P          .              .            +INF         1284.0014
 **** REPORT SUMMARY :        0     NONOPT
                              0 INFEASIBLE
                              0  UNBOUNDED
-GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:22:48 Page 7
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:26:15 Page 7
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 E x e c u t i o n
 
@@ -230,7 +230,7 @@ C 1.367,    A 4.056,    L 1.920
 ----     47 VARIABLE z.L                   =     9307.998  Target function
 
 
-EXECUTION TIME       =        0.112 SECONDS      4 MB  40.1.0 93c2a77b DEX-DEG
+EXECUTION TIME       =        0.085 SECONDS      4 MB  40.1.0 93c2a77b DEX-DEG
 
 
 USER: GAMS Community License for Juan Alegria        G220811|0002AO-GEN
