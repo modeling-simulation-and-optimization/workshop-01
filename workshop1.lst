@@ -1,4 +1,4 @@
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/01/22 09:59:59 Page 1
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 11:12:47 Page 1
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
@@ -9,11 +9,11 @@ C o m p i l a t i o n
       Juan Andrés Romero C - 202013449
       Juan Sebastián Alegría - 202011282
    8   
-   9  Sets i 'Foods' /C, A, L, P/
+   9  Sets i 'Foods'           /C, A, L, P/
   10       j 'Food Properties' /Cal, Prot, Sugar, Fat, Carbs/;
   11   
-  12  Parameter Limit(j) /Cal 1500, Prot 63, Sugar 25, Fat 50, Carbs 200/;
-  13  Parameter Price(i) /C 3000, A 1000, L 600, P 700/;
+  12  Parameter Price(i) /C 3000, A 1000, L 600, P 700/;
+  13  Parameter Limit(j) /Cal 1500, Prot 63, Sugar 25, Fat 50, Carbs 200/;
   14   
   15  Table t(j, i) 'Properties of each food'
   16   
@@ -30,13 +30,13 @@ C o m p i l a t i o n
   27   
   28  Positive Variable x;
   29   
-  30  Equations targetFunc    'Target function'
-  31            gtConstraint  'Properties Restriction'
-  32            ltConstraint;
+  30  Equations targetFunc   'Target function'
+  31            gtConstraint 'Minimum properties restriction'
+  32            ltConstraint 'Maximum properties restriction';
   33   
-  34  targetFunc..    z =e= sum((i), Price(i)*x(i));
-  35  gtConstraint(j)$(ord(j)=1 or ord(j) = 2) .. sum((i), t(j,i)*x(i)) =g= Limit(j);
-  36  ltConstraint(j)$(ord(j)=3 or ord(j)=4 or ord(j)=5) .. sum((i), t(j,i)*x(i)) =l= Limit(j);
+  34  targetFunc..                                         z =e= sum((i), Price(i)*x(i));
+  35  gtConstraint(j)$(ord(j)=1 or ord(j) = 2)..           sum((i), t(j,i)*x(i)) =g= Limit(j);
+  36  ltConstraint(j)$(ord(j)=3 or ord(j)=4 or ord(j)=5).. sum((i), t(j,i)*x(i)) =l= Limit(j);
   37   
   38  Model workshop1 /all/;
   39  option lp=CPLEX;
@@ -45,8 +45,8 @@ C o m p i l a t i o n
   42  Display z.l;
 
 
-COMPILATION TIME     =        0.000 SECONDS      3 MB  40.1.0 93c2a77b WEX-WEI
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/01/22 09:59:59 Page 2
+COMPILATION TIME     =        0.005 SECONDS      3 MB  40.1.0 93c2a77b DEX-DEG
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 11:12:47 Page 2
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Equation Listing    SOLVE workshop1 Using LP From line 40
 
@@ -56,14 +56,14 @@ Equation Listing    SOLVE workshop1 Using LP From line 40
 targetFunc..  z - 3000*x(C) - 1000*x(A) - 600*x(L) - 700*x(P) =E= 0 ; (LHS = 0)
      
 
----- gtConstraint  =G=  Properties Restriction
+---- gtConstraint  =G=  Minimum properties restriction
 
 gtConstraint(Cal)..  287*x(C) + 204*x(A) + 146*x(L) + 245*x(P) =G= 1500 ; (LHS = 0, INFES = 1500 ****)
      
 gtConstraint(Prot)..  26*x(C) + 4.2*x(A) + 8*x(L) + 6*x(P) =G= 63 ; (LHS = 0, INFES = 63 ****)
      
 
----- ltConstraint  =L=  
+---- ltConstraint  =L=  Maximum properties restriction
 
 ltConstraint(Sugar)..  0.01*x(A) + 13*x(L) + 35*x(P) =L= 25 ; (LHS = 0)
      
@@ -71,7 +71,7 @@ ltConstraint(Fat)..  19.3*x(C) + 0.5*x(A) + 8*x(L) + 0.8*x(P) =L= 50 ; (LHS = 0)
      
 ltConstraint(Carbs)..  44.1*x(A) + 11*x(L) + 55*x(P) =L= 200 ; (LHS = 0)
      
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/01/22 09:59:59 Page 3
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 11:12:47 Page 3
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Column Listing      SOLVE workshop1 Using LP From line 40
 
@@ -111,7 +111,7 @@ x(L)
        11       ltConstraint(Carbs)
 
 REMAINING ENTRY SKIPPED
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/01/22 09:59:59 Page 4
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 11:12:47 Page 4
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Range Statistics    SOLVE workshop1 Using LP From line 40
 
@@ -122,7 +122,7 @@ RHS       [min, max] : [ 2.500E+01, 1.500E+03] - Zero values observed as well
 Bound     [min, max] : [        NA,        NA] - Zero values observed as well
 Matrix    [min, max] : [ 1.000E-02, 3.000E+03]
 
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/01/22 09:59:59 Page 5
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 11:12:47 Page 5
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Model Statistics    SOLVE workshop1 Using LP From line 40
 
@@ -134,8 +134,8 @@ BLOCKS OF VARIABLES           2     SINGLE VARIABLES            5
 NON ZERO ELEMENTS            23
 
 
-GENERATION TIME      =        0.015 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/01/22 09:59:59 Page 6
+GENERATION TIME      =        0.016 SECONDS      4 MB  40.1.0 93c2a77b DEX-DEG
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 11:12:47 Page 6
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE workshop1 Using LP From line 40
 
@@ -150,9 +150,9 @@ Solution Report     SOLVE workshop1 Using LP From line 40
 **** MODEL STATUS      1 Optimal
 **** OBJECTIVE VALUE             9307.9977
 
- RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ RESOURCE USAGE, LIMIT          0.057 10000000000.000
  ITERATION COUNT, LIMIT         4    2147483647
---- *** This solver runs with a demo license. No commercial use.
+--- *** This solver runs with a community license. No commercial use.
 --- GMO setup time: 0.00s
 --- GMO memory 0.50 Mb (peak 0.50 Mb)
 --- Dictionary memory 0.00 Mb
@@ -161,7 +161,7 @@ Solution Report     SOLVE workshop1 Using LP From line 40
 
 
 --- LP status (1): optimal.
---- Cplex Time: 0.00sec (det. 0.01 ticks)
+--- Cplex Time: 0.01sec (det. 0.01 ticks)
 
 
 Optimal solution found
@@ -174,14 +174,14 @@ Objective:         9307.997731
 
   targetFunc  Target function
 
----- EQU gtConstraint  Properties Restriction
+---- EQU gtConstraint  Minimum properties restriction
 
             LOWER          LEVEL          UPPER         MARGINAL
 
 Cal       1500.0000      1500.0000        +INF           10.4530      
 Prot        63.0000        67.9273        +INF             .          
 
----- EQU ltConstraint  
+---- EQU ltConstraint  Maximum properties restriction
 
              LOWER          LEVEL          UPPER         MARGINAL
 
@@ -208,7 +208,7 @@ P          .              .            +INF         1284.0014
 **** REPORT SUMMARY :        0     NONOPT
                              0 INFEASIBLE
                              0  UNBOUNDED
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/01/22 09:59:59 Page 7
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 11:12:47 Page 7
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 E x e c u t i o n
 
@@ -221,14 +221,15 @@ C 1.367,    A 4.056,    L 1.920
 ----     42 VARIABLE z.L                   =     9307.998  Target function
 
 
-EXECUTION TIME       =        0.078 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
+EXECUTION TIME       =        0.125 SECONDS      4 MB  40.1.0 93c2a77b DEX-DEG
 
 
-USER: GAMS Demo license for Juan Romero              G220823|0002CO-GEN
-      University of Los Andes, Colombia                        DL072145
+USER: GAMS Community License for Juan Alegria        G220811|0002AO-GEN
+      Universidad de los Andes,                                  CL3634
+      License for teaching and research at degree granting institutions
 
 
 **** FILE SUMMARY
 
-Input      C:\Users\ElRey\Documents\Scripts\GAMS\workshop-01\workshop1.gms
-Output     C:\Users\ElRey\Documents\Scripts\GAMS\workshop-01\workshop1.lst
+Input      /Users/zejiran/hack/uniandes/MSO/workshop-01/workshop1.gms
+Output     /Users/zejiran/hack/uniandes/MSO/workshop-01/workshop1.lst
