@@ -1,4 +1,4 @@
-GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:26:15 Page 1
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/01/22 09:59:59 Page 1
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
@@ -9,51 +9,46 @@ C o m p i l a t i o n
       Juan Andrés Romero C - 202013449
       Juan Sebastián Alegría - 202011282
    8   
-   9  Sets i 'Foods' /C, A, L, P/;
-  10   
-  11  Parameter C(i)  'Calories of each Food'         /C 287, A 204, L 146, P 245/;
-  12  Parameter P(i) 'Proteins of each Food'          /C 26, A 4.2, L 8, P 6/;
-  13  Parameter S(i) 'Sugars of each Food'            /C 0, A 0.01, L 13, P 35/;
-  14  Parameter F(i)  'Fats of each Food'             /C 19.3, A 0.5, L 8, P 0.8/;
-  15  Parameter Carb(i) 'Carbohydrates of each Food'  /C 0, A 44.1, L 11, P 55/;
-  16  Parameter Price(i) 'Prices of each Food'        /C 3000, A 1000, L 600, P 700/;
-  17   
-  18  Variables z    'Target function'
-  19            x(i) 'Amount of a food';
-  20   
-  21  Scalar calLimit     'Minimum limit of calories'      /1500/;
-  22  Scalar proteinLimit 'Minimum limit of proteins'      /63/;
-  23  Scalar sugarLimit   'Maximum limit of sugars'        /25/;
-  24  Scalar fatLimit     'Maximum limit of fats'          /50/;
-  25  Scalar carbsLimit   'Maximum limit of carbohydrates' /200/;
-  26   
-  27  Positive Variable x;
-  28   
-  29  Equations targetFunc    'Target function'
-  30            calories      'Calorie Restriction'
-  31            proteins      'Protein Restriction'
-  32            sugars        'Sugar restriction'
-  33            fats          'Fat restriction'
-  34            carbohydrates 'Carbohydrate restriction';
-  35   
-  36  targetFunc..    z =e= sum((i), Price(i)*x(i));
-  37  calories..      sum((i), C(i)*x(i)) =g= calLimit;
-  38  proteins..      sum((i), P(i)*x(i)) =g= proteinLimit;
-  39  sugars..        sum((i), S(i)*x(i)) =l= sugarLimit;
-  40  fats..          sum((i), F(i)*x(i)) =l= fatLimit;
-  41  carbohydrates.. sum((i), Carb(i)*x(i)) =l= carbsLimit;
-  42   
-  43  Model workshop1 /all/;
-  44  option lp=CPLEX;
-  45  Solve workshop1 using lp minimizing z;
-  46  Display x.l;
-  47  Display z.l;
+   9  Sets i 'Foods' /C, A, L, P/
+  10       j 'Food Properties' /Cal, Prot, Sugar, Fat, Carbs/;
+  11   
+  12  Parameter Limit(j) /Cal 1500, Prot 63, Sugar 25, Fat 50, Carbs 200/;
+  13  Parameter Price(i) /C 3000, A 1000, L 600, P 700/;
+  14   
+  15  Table t(j, i) 'Properties of each food'
+  16   
+  17           C     A     L    P
+  18    Cal    287   204   146  245
+  19    Prot   26    4.2   8    6
+  20    Sugar  0     0.01  13   35
+  21    Fat    19.3  0.5   8    0.8
+  22    Carbs  0     44.1  11   55;
+  23   
+  24   
+  25  Variables z    'Target function'
+  26            x(i) 'Amount of a food';
+  27   
+  28  Positive Variable x;
+  29   
+  30  Equations targetFunc    'Target function'
+  31            gtConstraint  'Properties Restriction'
+  32            ltConstraint;
+  33   
+  34  targetFunc..    z =e= sum((i), Price(i)*x(i));
+  35  gtConstraint(j)$(ord(j)=1 or ord(j) = 2) .. sum((i), t(j,i)*x(i)) =g= Limit(j);
+  36  ltConstraint(j)$(ord(j)=3 or ord(j)=4 or ord(j)=5) .. sum((i), t(j,i)*x(i)) =l= Limit(j);
+  37   
+  38  Model workshop1 /all/;
+  39  option lp=CPLEX;
+  40  Solve workshop1 using lp minimizing z;
+  41  Display x.l;
+  42  Display z.l;
 
 
-COMPILATION TIME     =        0.003 SECONDS      3 MB  40.1.0 93c2a77b DEX-DEG
-GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:26:15 Page 2
+COMPILATION TIME     =        0.000 SECONDS      3 MB  40.1.0 93c2a77b WEX-WEI
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/01/22 09:59:59 Page 2
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Equation Listing    SOLVE workshop1 Using LP From line 45
+Equation Listing    SOLVE workshop1 Using LP From line 40
 
 
 ---- targetFunc  =E=  Target function
@@ -61,33 +56,24 @@ Equation Listing    SOLVE workshop1 Using LP From line 45
 targetFunc..  z - 3000*x(C) - 1000*x(A) - 600*x(L) - 700*x(P) =E= 0 ; (LHS = 0)
      
 
----- calories  =G=  Calorie Restriction
+---- gtConstraint  =G=  Properties Restriction
 
-calories..  287*x(C) + 204*x(A) + 146*x(L) + 245*x(P) =G= 1500 ; (LHS = 0, INFES = 1500 ****)
+gtConstraint(Cal)..  287*x(C) + 204*x(A) + 146*x(L) + 245*x(P) =G= 1500 ; (LHS = 0, INFES = 1500 ****)
+     
+gtConstraint(Prot)..  26*x(C) + 4.2*x(A) + 8*x(L) + 6*x(P) =G= 63 ; (LHS = 0, INFES = 63 ****)
      
 
----- proteins  =G=  Protein Restriction
+---- ltConstraint  =L=  
 
-proteins..  26*x(C) + 4.2*x(A) + 8*x(L) + 6*x(P) =G= 63 ; (LHS = 0, INFES = 63 ****)
+ltConstraint(Sugar)..  0.01*x(A) + 13*x(L) + 35*x(P) =L= 25 ; (LHS = 0)
      
-
----- sugars  =L=  Sugar restriction
-
-sugars..  0.01*x(A) + 13*x(L) + 35*x(P) =L= 25 ; (LHS = 0)
+ltConstraint(Fat)..  19.3*x(C) + 0.5*x(A) + 8*x(L) + 0.8*x(P) =L= 50 ; (LHS = 0)
      
-
----- fats  =L=  Fat restriction
-
-fats..  19.3*x(C) + 0.5*x(A) + 8*x(L) + 0.8*x(P) =L= 50 ; (LHS = 0)
+ltConstraint(Carbs)..  44.1*x(A) + 11*x(L) + 55*x(P) =L= 200 ; (LHS = 0)
      
-
----- carbohydrates  =L=  Carbohydrate restriction
-
-carbohydrates..  44.1*x(A) + 11*x(L) + 55*x(P) =L= 200 ; (LHS = 0)
-     
-GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:26:15 Page 3
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/01/22 09:59:59 Page 3
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Column Listing      SOLVE workshop1 Using LP From line 45
+Column Listing      SOLVE workshop1 Using LP From line 40
 
 
 ---- z  Target function
@@ -102,32 +88,32 @@ z
 x(C)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
     -3000       targetFunc
-      287       calories
-       26       proteins
-       19.3     fats
+      287       gtConstraint(Cal)
+       26       gtConstraint(Prot)
+       19.3     ltConstraint(Fat)
 
 x(A)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
     -1000       targetFunc
-      204       calories
-        4.2     proteins
-        0.01    sugars
-        0.5     fats
-       44.1     carbohydrates
+      204       gtConstraint(Cal)
+        4.2     gtConstraint(Prot)
+        0.01    ltConstraint(Sugar)
+        0.5     ltConstraint(Fat)
+       44.1     ltConstraint(Carbs)
 
 x(L)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
      -600       targetFunc
-      146       calories
-        8       proteins
-       13       sugars
-        8       fats
-       11       carbohydrates
+      146       gtConstraint(Cal)
+        8       gtConstraint(Prot)
+       13       ltConstraint(Sugar)
+        8       ltConstraint(Fat)
+       11       ltConstraint(Carbs)
 
 REMAINING ENTRY SKIPPED
-GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:26:15 Page 4
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/01/22 09:59:59 Page 4
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Range Statistics    SOLVE workshop1 Using LP From line 45
+Range Statistics    SOLVE workshop1 Using LP From line 40
 
 
 RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
@@ -136,37 +122,37 @@ RHS       [min, max] : [ 2.500E+01, 1.500E+03] - Zero values observed as well
 Bound     [min, max] : [        NA,        NA] - Zero values observed as well
 Matrix    [min, max] : [ 1.000E-02, 3.000E+03]
 
-GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:26:15 Page 5
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/01/22 09:59:59 Page 5
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Model Statistics    SOLVE workshop1 Using LP From line 45
+Model Statistics    SOLVE workshop1 Using LP From line 40
 
 
 MODEL STATISTICS
 
-BLOCKS OF EQUATIONS           6     SINGLE EQUATIONS            6
+BLOCKS OF EQUATIONS           3     SINGLE EQUATIONS            6
 BLOCKS OF VARIABLES           2     SINGLE VARIABLES            5
 NON ZERO ELEMENTS            23
 
 
-GENERATION TIME      =        0.013 SECONDS      4 MB  40.1.0 93c2a77b DEX-DEG
-GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:26:15 Page 6
+GENERATION TIME      =        0.015 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/01/22 09:59:59 Page 6
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Solution Report     SOLVE workshop1 Using LP From line 45
+Solution Report     SOLVE workshop1 Using LP From line 40
 
 
                S O L V E      S U M M A R Y
 
      MODEL   workshop1           OBJECTIVE  z
      TYPE    LP                  DIRECTION  MINIMIZE
-     SOLVER  CPLEX               FROM LINE  45
+     SOLVER  CPLEX               FROM LINE  40
 
 **** SOLVER STATUS     1 Normal Completion
 **** MODEL STATUS      1 Optimal
 **** OBJECTIVE VALUE             9307.9977
 
- RESOURCE USAGE, LIMIT          0.042 10000000000.000
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
  ITERATION COUNT, LIMIT         4    2147483647
---- *** This solver runs with a community license. No commercial use.
+--- *** This solver runs with a demo license. No commercial use.
 --- GMO setup time: 0.00s
 --- GMO memory 0.50 Mb (peak 0.50 Mb)
 --- Dictionary memory 0.00 Mb
@@ -175,7 +161,7 @@ Solution Report     SOLVE workshop1 Using LP From line 45
 
 
 --- LP status (1): optimal.
---- Cplex Time: 0.01sec (det. 0.01 ticks)
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
 
 
 Optimal solution found
@@ -185,18 +171,23 @@ Objective:         9307.997731
                            LOWER          LEVEL          UPPER         MARGINAL
 
 ---- EQU targetFunc          .              .              .             1.0000      
----- EQU calories        1500.0000      1500.0000        +INF           10.4530      
----- EQU proteins          63.0000        67.9273        +INF             .          
----- EQU sugars            -INF           25.0000        25.0000       -49.5228      
----- EQU fats              -INF           43.7630        50.0000          .          
----- EQU carbohydr~        -INF          200.0000       200.0000       -25.6669      
 
   targetFunc  Target function
-  calories  Calorie Restriction
-  proteins  Protein Restriction
-  sugars  Sugar restriction
-  fats  Fat restriction
-  carbohydrates  Carbohydrate restriction
+
+---- EQU gtConstraint  Properties Restriction
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+Cal       1500.0000      1500.0000        +INF           10.4530      
+Prot        63.0000        67.9273        +INF             .          
+
+---- EQU ltConstraint  
+
+             LOWER          LEVEL          UPPER         MARGINAL
+
+Sugar        -INF           25.0000        25.0000       -49.5228      
+Fat          -INF           43.7630        50.0000          .          
+Carbs        -INF          200.0000       200.0000       -25.6669      
 
                            LOWER          LEVEL          UPPER         MARGINAL
 
@@ -217,28 +208,27 @@ P          .              .            +INF         1284.0014
 **** REPORT SUMMARY :        0     NONOPT
                              0 INFEASIBLE
                              0  UNBOUNDED
-GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/01/22 07:26:15 Page 7
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/01/22 09:59:59 Page 7
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 E x e c u t i o n
 
 
-----     46 VARIABLE x.L  Amount of a food
+----     41 VARIABLE x.L  Amount of a food
 
 C 1.367,    A 4.056,    L 1.920
 
 
-----     47 VARIABLE z.L                   =     9307.998  Target function
+----     42 VARIABLE z.L                   =     9307.998  Target function
 
 
-EXECUTION TIME       =        0.085 SECONDS      4 MB  40.1.0 93c2a77b DEX-DEG
+EXECUTION TIME       =        0.078 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
 
 
-USER: GAMS Community License for Juan Alegria        G220811|0002AO-GEN
-      Universidad de los Andes,                                  CL3634
-      License for teaching and research at degree granting institutions
+USER: GAMS Demo license for Juan Romero              G220823|0002CO-GEN
+      University of Los Andes, Colombia                        DL072145
 
 
 **** FILE SUMMARY
 
-Input      /Users/zejiran/hack/uniandes/MSO/workshop-01/workshop1.gms
-Output     /Users/zejiran/hack/uniandes/MSO/workshop-01/workshop1.lst
+Input      C:\Users\ElRey\Documents\Scripts\GAMS\workshop-01\workshop1.gms
+Output     C:\Users\ElRey\Documents\Scripts\GAMS\workshop-01\workshop1.lst

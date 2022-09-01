@@ -6,25 +6,21 @@ Juan Andrés Romero C - 202013449
 Juan Sebastián Alegría - 202011282
 $offText
 
-Table t(i, j) 'Properties of each food'
+Sets i 'Foods' /C, A, L, P/
+     j 'Food Properties' /Cal, Prot, Sugar, Fat, Carbs/;
+
+Parameter Limit(j) /Cal 1500, Prot 63, Sugar 25, Fat 50, Carbs 200/;
+Parameter Price(i) /C 3000, A 1000, L 600, P 700/;
+
+Table t(j, i) 'Properties of each food'
 
          C     A     L    P   
-  Calo   287   204   146  245
-  Prote  26    4.2   8    6     
+  Cal    287   204   146  245
+  Prot   26    4.2   8    6     
   Sugar  0     0.01  13   35 
-  Fats   19.3  0.5   8    0.8
-  Carbo  0     44.1  11   55  
-  Price  3000  1000  600  700;
+  Fat    19.3  0.5   8    0.8
+  Carbs  0     44.1  11   55;
   
-Table t(i, j) 'Limit per property'
-
-         Limit   
-  Calo   1500
-  Prote  63
-  Sugar  25
-  Fats   50
-  Carbo  200;
-
 
 Variables z    'Target function'
           x(i) 'Amount of a food';
@@ -32,14 +28,12 @@ Variables z    'Target function'
 Positive Variable x;
     
 Equations targetFunc    'Target function'
-          limit         'Properties Restriction';
+          gtConstraint  'Properties Restriction'
+          ltConstraint;
 
 targetFunc..    z =e= sum((i), Price(i)*x(i));
-calories..      sum((i), C(i)*x(i)) =g= calLimit;
-proteins..      sum((i), P(i)*x(i)) =g= proteinLimit;
-sugars..        sum((i), S(i)*x(i)) =l= sugarLimit;
-fats..          sum((i), F(i)*x(i)) =l= fatLimit;
-carbohydrates.. sum((i), Carb(i)*x(i)) =l= carbsLimit;
+gtConstraint(j)$(ord(j)=1 or ord(j) = 2) .. sum((i), t(j,i)*x(i)) =g= Limit(j);
+ltConstraint(j)$(ord(j)=3 or ord(j)=4 or ord(j)=5) .. sum((i), t(j,i)*x(i)) =l= Limit(j);  
 
 Model workshop1 /all/;
 option lp=CPLEX;
